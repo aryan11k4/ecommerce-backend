@@ -11,17 +11,17 @@ import java.util.List;
 
 @Service
 public class CategoryService {
-    private final CategoryRepository repository;
+    private final CategoryRepository categoryRepository;
 
     public CategoryService(CategoryRepository repository){
-        this.repository = repository;
+        this.categoryRepository = repository;
     }
 
     public CategoryResponseDto createCategory(CategoryRequestDto dto) {
         Category category = new Category();
         category.setName(dto.getName());
 
-        category = repository.save(category);
+        category = categoryRepository.save(category);
 
         CategoryResponseDto response = new CategoryResponseDto();
         response.setId(category.getId());
@@ -31,7 +31,7 @@ public class CategoryService {
     }
 
     public List<CategoryResponseDto> getAllCategories() {
-        List<Category> categories = repository.findAll();
+        List<Category> categories = categoryRepository.findAll();
 
         List<CategoryResponseDto> response = new ArrayList<>();
 

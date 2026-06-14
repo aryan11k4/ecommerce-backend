@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api/admin/category")
 public class AdminCategoryController {
 
     private final CategoryService service;
@@ -19,14 +19,14 @@ public class AdminCategoryController {
         this.service = service;
     }
 
-    @PostMapping("/category")
+    @PostMapping("/add")
     public ResponseEntity<CategoryResponseDto> createCategory(@RequestBody CategoryRequestDto dto){
         CategoryResponseDto response = service.createCategory(dto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/categories")
+    @GetMapping("/getAll")
     public ResponseEntity<List<CategoryResponseDto>> getAllCategories(){
         List<CategoryResponseDto> response = service.getAllCategories();
         return ResponseEntity.ok(response);
