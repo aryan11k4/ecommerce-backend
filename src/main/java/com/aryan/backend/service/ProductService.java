@@ -23,11 +23,11 @@ public class ProductService {
     }
 
     public ProductResponseDto addProduct(ProductRequestDto dto) {
-        Product prod = new Product();
         Category cat = categoryRepository
                 .findById(dto.getCategoryId())
-                        .orElseThrow(() -> new RuntimeException("Category not found"));
+                .orElseThrow(() -> new RuntimeException("Category not found"));
 
+        Product prod = new Product();
         prod.setName(dto.getName());
         prod.setCategory(cat);
         prod.setPrice(dto.getPrice());
