@@ -25,7 +25,7 @@ public class User {
     private String email;
 
     @Column(nullable = false)
-    private long password;
+    private String password;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -45,6 +45,3 @@ public class User {
 
 }
 
-enum Role{
-    USER, ADMIN
-}
