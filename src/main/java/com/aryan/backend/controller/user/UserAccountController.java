@@ -1,5 +1,7 @@
 package com.aryan.backend.controller.user;
 
+import com.aryan.backend.dto.User.UserLoginRequestDto;
+import com.aryan.backend.dto.User.UserLoginResponseDto;
 import com.aryan.backend.dto.User.UserRegisterRequestDto;
 import com.aryan.backend.dto.User.UserRegisterResponseDto;
 import com.aryan.backend.service.UserService;
@@ -9,11 +11,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/user")
-public class CreateUserController {
+public class UserAccountController {
 
     UserService service;
 
-    public CreateUserController(UserService service){
+    public UserAccountController(UserService service){
         this.service = service;
     }
 
@@ -22,6 +24,13 @@ public class CreateUserController {
         UserRegisterResponseDto response = service.addUser(dto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<UserLoginResponseDto> loginUser(@RequestBody UserLoginRequestDto dto){
+        UserLoginResponseDto response = service.verifyLogIn(dto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 }
