@@ -7,6 +7,8 @@ import com.aryan.backend.dto.User.UserRegisterResponseDto;
 import com.aryan.backend.entity.User;
 import com.aryan.backend.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +17,16 @@ public class UserService {
 
     private final UserRepository userRepo;
     private final BCryptPasswordEncoder encoder;
-    private final AuthenticationManager auhtManager;
+    private final AuthenticationManager authManager;
+    private final JWTService jwtService;
 
     public UserService(
-            UserRepository userRepo, BCryptPasswordEncoder encoder, AuthenticationManager authManager){
+            UserRepository userRepo, BCryptPasswordEncoder encoder,
+            AuthenticationManager authManager, JWTService jwtService){
         this.userRepo = userRepo;
         this.encoder = encoder;
-        this.auhtManager = authManager;
+        this.authManager = authManager;
+        this.jwtService = jwtService;
     }
 
     public UserRegisterResponseDto addUser(UserRegisterRequestDto dto) {
@@ -40,18 +45,22 @@ public class UserService {
     }
 
     public UserLoginResponseDto verifyLogIn(UserLoginRequestDto dto) {
-        User u1 = userRepo.findByEmail(dto.getEmail());
+        Authentication authentication =
+                authManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getName() ,dto.getPassword()));
 
-        if(!encoder.matches(dto.getPassword(), u1.getPassword())){
-//            throw new RuntimeException("Email and password doesnt match!!");
-            throw new IllegalStateException("Email and fsfaspassword doesnt match!!");
-        }
 
         UserLoginResponseDto responseDto = new UserLoginResponseDto();
 
-        responseDto.setId(u1.getId());
-        responseDto.setName(u1.getName());
-        responseDto.setEmail(u1.getEmail());
+        if(authentication.isAuthenticated()){
+            User u1 = userRepo.findByName(dto.getName());
+
+            responseDto.setId(u1.getId());
+            responseDto.setName(u1.getName());
+            responseDto.setEmail(u1.getEmail());
+            responseDto.setToken(jwtService.generateToken(u1.getName()));
+
+            return responseDto;
+        }
 
         return responseDto;
     }

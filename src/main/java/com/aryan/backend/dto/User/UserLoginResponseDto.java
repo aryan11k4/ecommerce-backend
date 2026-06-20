@@ -9,4 +9,5 @@ public class UserLoginResponseDto {
     String name;
     String email;
     Integer id;
+    String token;
 }
