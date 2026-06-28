@@ -3,6 +3,8 @@ package com.aryan.backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @Entity
@@ -18,7 +20,7 @@ public class Product {
     private String name;
 
     @Column(name = "cost", nullable = false)
-    private float price;
+    private BigDecimal price;
 
     @ManyToOne
     @JoinColumn(name = "category_id")

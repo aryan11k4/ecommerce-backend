@@ -34,12 +34,17 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(request
-                                    -> request.requestMatchers(
-                                            "/api/user/register",
-                                            "/api/user/login",
-                                            "/error")
-                                    .permitAll().anyRequest().authenticated())
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers(
+                                "/api/user/register",
+                                "/api/user/login",
+                                "/error")
+                        .permitAll()
+                        .requestMatchers("/api/admin/**")
+                        .hasAuthority("ADMIN")
+                        .requestMatchers("/api/user/**")
+                        .hasAuthority("USER")
+                        .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
