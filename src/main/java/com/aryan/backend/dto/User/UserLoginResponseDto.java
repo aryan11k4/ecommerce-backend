@@ -10,4 +10,5 @@ public class UserLoginResponseDto {
     String email;
     Integer id;
     String token;
+    String role;
 }

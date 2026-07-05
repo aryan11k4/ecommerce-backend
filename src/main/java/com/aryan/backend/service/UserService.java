@@ -65,6 +65,7 @@ public class UserService {
             responseDto.setId(u1.getId());
             responseDto.setName(u1.getName());
             responseDto.setEmail(u1.getEmail());
+            responseDto.setRole(u1.getRole().name());
             responseDto.setToken(jwtService.generateToken(u1.getName()));
 
             return responseDto;
