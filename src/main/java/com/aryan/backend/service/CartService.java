@@ -31,7 +31,7 @@ public class CartService {
     }
 
     public CartResopnseDto addToCart(Integer productID, String userName) {
-        User u = userRepo.findByName(userName);
+        User u = userRepo.findByEmail(userName);
         Cart cart = u.getCart();
 
         if(cart == null) {
@@ -91,7 +91,7 @@ public class CartService {
     }
 
     public CartResopnseDto getCartItems(String username) {
-        User u = userRepo.findByName(username);
+        User u = userRepo.findByEmail(username);
         Cart cart = u.getCart();
 
         CartResopnseDto cartResopnseDto = new CartResopnseDto();
