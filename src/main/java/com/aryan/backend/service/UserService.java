@@ -54,13 +54,13 @@ public class UserService {
 
     public UserLoginResponseDto verifyLogIn(UserLoginRequestDto dto) {
         Authentication authentication =
-                authManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getName() ,dto.getPassword()));
+                authManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getEmail() ,dto.getPassword()));
 
 
         UserLoginResponseDto responseDto = new UserLoginResponseDto();
 
         if(authentication.isAuthenticated()){
-            User u1 = userRepo.findByName(dto.getName());
+            User u1 = userRepo.findByEmail(dto.getEmail());
 
             responseDto.setId(u1.getId());
             responseDto.setName(u1.getName());
