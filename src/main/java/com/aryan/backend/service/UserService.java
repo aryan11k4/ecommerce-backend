@@ -5,14 +5,19 @@ import com.aryan.backend.dto.User.UserLoginResponseDto;
 import com.aryan.backend.dto.User.UserRegisterRequestDto;
 import com.aryan.backend.dto.User.UserRegisterResponseDto;
 import com.aryan.backend.entity.Cart;
+import com.aryan.backend.entity.Order;
 import com.aryan.backend.entity.User;
+import com.aryan.backend.repository.CartItemRepository;
 import com.aryan.backend.repository.CartRepository;
+import com.aryan.backend.repository.OrderRepository;
 import com.aryan.backend.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserService {
@@ -22,21 +27,27 @@ public class UserService {
     private final BCryptPasswordEncoder encoder;
     private final AuthenticationManager authManager;
     private final JWTService jwtService;
+    private final CartItemRepository cartItemRepo;
+    private final OrderRepository orderRepo;
 
     public UserService(
             UserRepository userRepo, CartRepository cartRepo, BCryptPasswordEncoder encoder,
-            AuthenticationManager authManager, JWTService jwtService){
+            AuthenticationManager authManager, JWTService jwtService, CartItemRepository cartItemRepo, OrderRepository orderRepo){
         this.userRepo = userRepo;
         this.cartRepo = cartRepo;
         this.encoder = encoder;
         this.authManager = authManager;
         this.jwtService = jwtService;
+        this.cartItemRepo = cartItemRepo;
+        this.orderRepo = orderRepo;
     }
 
     public UserRegisterResponseDto addUser(UserRegisterRequestDto dto) {
         if(userRepo.existsByEmail(dto.getEmail())){
             throw new RuntimeException("User with this email already exists");
         }
+
+        if(dto.getName() == null) throw new RuntimeException("No username");
 
         User u1 = new User();
         Cart cart = new Cart();
@@ -72,5 +83,24 @@ public class UserService {
         }
 
         return responseDto;
+    }
+
+    public void deleteUser(String email) {
+        User u = userRepo.findByEmail(email);
+
+        if (u == null) {
+            throw new RuntimeException("User not found");
+        }
+
+        Cart cart = u.getCart();
+        if (cart != null) {
+            cartItemRepo.deleteAll(cart.getCartItems());
+            cartRepo.delete(cart);
+        }
+
+        List<Order> orders = orderRepo.findByUserIdOrderByOrderDateDesc(u.getId());
+        orderRepo.deleteAll(orders); // cascades to order_items via CascadeType.ALL on Order
+
+        userRepo.delete(u);
     }
 }

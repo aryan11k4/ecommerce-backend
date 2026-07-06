@@ -1,4 +1,4 @@
-package com.aryan.backend.dto.User;
+package com.aryan.backend.dto.cart;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class CartResopnseDto {
+public class CartResponseDto {
     private Integer id;
     private int totalItems;
     private List<CartItemResponseDto> items;

@@ -1,7 +1,7 @@
 package com.aryan.backend.service;
 
-import com.aryan.backend.dto.User.CartItemResponseDto;
-import com.aryan.backend.dto.User.CartResopnseDto;
+import com.aryan.backend.dto.cart.CartItemResponseDto;
+import com.aryan.backend.dto.cart.CartResponseDto;
 import com.aryan.backend.entity.Cart;
 import com.aryan.backend.entity.CartItem;
 import com.aryan.backend.entity.Product;
@@ -13,7 +13,6 @@ import com.aryan.backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,7 +29,7 @@ public class CartService {
         this.productRepo = productRepo;
     }
 
-    public CartResopnseDto addToCart(Integer productID, String userName) {
+    public CartResponseDto addToCart(Integer productID, String userName) {
         User u = userRepo.findByEmail(userName);
         Cart cart = u.getCart();
 
@@ -66,15 +65,15 @@ public class CartService {
         return getCartItems(u);
     }
 
-    public CartResopnseDto getCartItems(User u) {
+    public CartResponseDto getCartItems(User u) {
         Cart cart = u.getCart();
 
-        CartResopnseDto cartResopnseDto = new CartResopnseDto();
+        CartResponseDto cartResponseDto = new CartResponseDto();
 
-        cartResopnseDto.setItems(new ArrayList<>());
-        cartResopnseDto.setId(cart.getId());
-        cartResopnseDto.setTotalItems(cartItemRepo.countItemsByUserId(u.getId()));
-        cartResopnseDto.setTotalPrice(cartItemRepo.getTotalPriceByUserId(u.getId()));
+        cartResponseDto.setItems(new ArrayList<>());
+        cartResponseDto.setId(cart.getId());
+        cartResponseDto.setTotalItems(cartItemRepo.countItemsByUserId(u.getId()));
+        cartResponseDto.setTotalPrice(cartItemRepo.getTotalPriceByUserId(u.getId()));
 
         for(CartItem c : cart.getCartItems()) {
             CartItemResponseDto i = new CartItemResponseDto();
@@ -84,22 +83,22 @@ public class CartService {
             i.setQuantity(c.getQuantity());
             i.setProductPrice(c.getProductPrice());
 
-            cartResopnseDto.getItems().add(i);
+            cartResponseDto.getItems().add(i);
         }
 
-        return cartResopnseDto;
+        return cartResponseDto;
     }
 
-    public CartResopnseDto getCartItems(String username) {
+    public CartResponseDto getCartItems(String username) {
         User u = userRepo.findByEmail(username);
         Cart cart = u.getCart();
 
-        CartResopnseDto cartResopnseDto = new CartResopnseDto();
+        CartResponseDto cartResponseDto = new CartResponseDto();
 
-        cartResopnseDto.setItems(new ArrayList<>());
-        cartResopnseDto.setId(cart.getId());
-        cartResopnseDto.setTotalItems(cartItemRepo.countItemsByUserId(u.getId()));
-        cartResopnseDto.setTotalPrice(cartItemRepo.getTotalPriceByUserId(u.getId()));
+        cartResponseDto.setItems(new ArrayList<>());
+        cartResponseDto.setId(cart.getId());
+        cartResponseDto.setTotalItems(cartItemRepo.countItemsByUserId(u.getId()));
+        cartResponseDto.setTotalPrice(cartItemRepo.getTotalPriceByUserId(u.getId()));
 
         for(CartItem c : cart.getCartItems()) {
             CartItemResponseDto i = new CartItemResponseDto();
@@ -109,9 +108,9 @@ public class CartService {
             i.setQuantity(c.getQuantity());
             i.setProductPrice(c.getProductPrice());
 
-            cartResopnseDto.getItems().add(i);
+            cartResponseDto.getItems().add(i);
         }
 
-        return cartResopnseDto;
+        return cartResponseDto;
     }
 }

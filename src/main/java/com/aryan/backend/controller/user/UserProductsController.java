@@ -1,6 +1,6 @@
 package com.aryan.backend.controller.user;
 
-import com.aryan.backend.dto.User.CartResopnseDto;
+import com.aryan.backend.dto.cart.CartResponseDto;
 import com.aryan.backend.dto.product.ProductResponseDto;
 import com.aryan.backend.security.UserPrincipal;
 import com.aryan.backend.service.CartService;
@@ -30,15 +30,15 @@ public class UserProductsController {
     }
 
     @PostMapping("cart/item/addToCart")
-    public ResponseEntity<CartResopnseDto> addToCart(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody Integer productID) {
-        CartResopnseDto responseDto = cartService.addToCart(productID, userPrincipal.getUsername());
+    public ResponseEntity<CartResponseDto> addToCart(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody Integer productID) {
+        CartResponseDto responseDto = cartService.addToCart(productID, userPrincipal.getUsername());
 
         return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping("/cart/getAll")
-    public ResponseEntity<CartResopnseDto> getCartProducts(@AuthenticationPrincipal UserPrincipal userPrincipal) {
-        CartResopnseDto resopnseDto = cartService.getCartItems(userPrincipal.getUsername());
+    public ResponseEntity<CartResponseDto> getCartProducts(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        CartResponseDto resopnseDto = cartService.getCartItems(userPrincipal.getUsername());
 
         return ResponseEntity.ok(resopnseDto);
     }
